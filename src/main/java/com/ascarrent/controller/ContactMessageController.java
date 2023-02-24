@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -27,9 +28,9 @@ public class ContactMessageController {
 
     // Create ContactMessage
     @PostMapping("/visitors")
-    public ResponseEntity<ACRResponse> createMessage(@Valid @RequestBody ContactMessageRequest contactMessageRequest) {
-        contactMessageService.createMessage(contactMessageRequest);
-        ACRResponse response = new ACRResponse("Contact Message successfully created", true);
+    public ResponseEntity<ACRResponse> createMessage(@Valid @RequestBody ContactMessageRequest contactMessageRequest, HttpServletRequest httpServletRequest) {
+        contactMessageService.createMessage(contactMessageRequest,httpServletRequest);
+        ACRResponse response = new ACRResponse("The Message has been successfully saved ", true);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
@@ -53,6 +54,12 @@ public class ContactMessageController {
         Pageable pageable = PageRequest.of(page,size, Sort.by(direction,prop));
         return ResponseEntity.ok(contactMessageService.getAllContactMessagesWithPage(pageable));
 
+    }
+
+    // Get a contact with id (path variable)
+    @GetMapping("/{id}")
+    public ResponseEntity<ContactMessageDTO> getMessageWithPath(@PathVariable("id") Long id) {
+       return ResponseEntity.ok(contactMessageService.getMessageWithId(id));
     }
 
 }

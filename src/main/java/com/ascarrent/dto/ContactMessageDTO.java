@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -18,5 +20,8 @@ public class ContactMessageDTO {
     private String phone;
     private String subject;
     private String messageBody;
+    private String ipAddress;
+    private LocalDateTime createdDateTime;
+
 
 }

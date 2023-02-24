@@ -6,6 +6,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
 
 
 @Getter
@@ -35,6 +36,13 @@ public class ContactMessage {
 
     @Column(length = 300)
     private String messageBody;
+
+    @Column(nullable = false)
+    private String ipAddress;
+
+    @Column(nullable = false)
+    private LocalDateTime createdDateTime;
+
 
 
 }
