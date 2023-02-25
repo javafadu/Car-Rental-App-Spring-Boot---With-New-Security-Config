@@ -56,10 +56,17 @@ public class ContactMessageController {
 
     }
 
-    // Get a contact with id (path variable)
+    // Get a contact with id (PathVariable solution)
     @GetMapping("/{id}")
     public ResponseEntity<ContactMessageDTO> getMessageWithPath(@PathVariable("id") Long id) {
        return ResponseEntity.ok(contactMessageService.getMessageWithId(id));
+    }
+
+    // Get a contact with id (RequestParam solution)
+    @GetMapping("/message")
+    public ResponseEntity<ContactMessageDTO> getMessageWithRequestParam(
+            @RequestParam("id") Long id) {
+        return ResponseEntity.ok(contactMessageService.getMessageWithId(id));
     }
 
 }

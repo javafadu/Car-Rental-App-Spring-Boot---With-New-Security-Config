@@ -32,7 +32,7 @@ public class ContactMessageService {
             "HTTP_FORWARDED_FOR",
             "HTTP_FORWARDED",
             "HTTP_VIA",
-            "REMOTE_ADDR" };
+            "REMOTE_ADDR"};
 
     public ContactMessageService(ContactMessageMapper contactMessageMapper, ContactMessageRepository contactMessageRepository) {
         this.contactMessageMapper = contactMessageMapper;
@@ -40,25 +40,31 @@ public class ContactMessageService {
     }
 
     public void createMessage(ContactMessageRequest contactMessageRequest, HttpServletRequest request) {
-       ContactMessage contactMessage
-               = contactMessageMapper.contactMessageRequestToContactMessage(contactMessageRequest);
-        System.out.println("CLIENT IP ADDRESS:"+getClientIpAddress(request));
-       contactMessage.setIpAddress(getClientIpAddress(request));
-       contactMessage.setCreatedDateTime(LocalDateTime.now());
-       contactMessageRepository.save(contactMessage);
+        ContactMessage contactMessage
+                = contactMessageMapper.contactMessageRequestToContactMessage(contactMessageRequest);
+        System.out.println("CLIENT IP ADDRESS:" + getClientIpAddress(request));
+        contactMessage.setIpAddress(getClientIpAddress(request));
+        contactMessage.setCreatedDateTime(LocalDateTime.now());
+        contactMessageRepository.save(contactMessage);
 
     }
 
     public List<ContactMessageDTO> getAllContactMessages() {
-        List<ContactMessage> allContacts =  contactMessageRepository.findAll();
-        return contactMessageMapper.map(allContacts);
+        List<ContactMessage> allContacts = contactMessageRepository.findAll();
+        return contactMessageMapper.listContactMessageToListDTO(allContacts);
     }
 
     public Page<ContactMessageDTO> getAllContactMessagesWithPage(Pageable pageable) {
         Page<ContactMessage> contactMessagePage = contactMessageRepository.findAll(pageable);
         Page<ContactMessageDTO> contactMessageDTOPage = getPageDTO(contactMessagePage);
 
-        return  contactMessageDTOPage;
+        return contactMessageDTOPage;
+
+    }
+
+    public ContactMessageDTO getMessageWithId(Long id) {
+        ContactMessage contactMessage = contactMessageRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(String.format(ErrorMessages.RESOURCE_NOT_FOUND_EXCEPTION, id)));
+        return contactMessageMapper.contactMessageToDTO(contactMessage);
 
     }
 
@@ -80,9 +86,4 @@ public class ContactMessageService {
     }
 
 
-    public ContactMessageDTO getMessageWithId(Long id) {
-        ContactMessage contactMessage = contactMessageRepository.findById(id).orElseThrow(()->new ResourceNotFoundException(String.format(ErrorMessages.RESOURCE_NOT_FOUND_EXCEPTION,id)));
-        return contactMessageMapper.contactMessageToDTO(contactMessage);
-
-    }
 }
