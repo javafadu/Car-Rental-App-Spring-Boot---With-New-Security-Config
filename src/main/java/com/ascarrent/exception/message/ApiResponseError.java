@@ -35,8 +35,6 @@ public class ApiResponseError {
         this.requestURI=requestURI;
     }
 
-
-
     // Getter Setters
 
     public HttpStatus getStatus() {
