@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 import java.time.LocalDateTime;
 
 public class ApiResponseError {
-    // AIM: General Template for Custom Error Messages
+    // AIM: General Exception Template for Custom Error Messages
 
     private HttpStatus status;
 

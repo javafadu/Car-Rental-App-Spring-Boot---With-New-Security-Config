@@ -33,4 +33,27 @@ public class AsCarRentExceptionHandler extends ResponseEntityExceptionHandler {
 
     }
 
+
+
+
+    // Handle RunTimeException (in case of any exception situation other than above situations in RunTimeException layer)
+    @ExceptionHandler(RuntimeException.class)
+    protected ResponseEntity<Object> handleRuntimeException (RuntimeException ex, WebRequest request) {
+        ApiResponseError error = new ApiResponseError(HttpStatus.INTERNAL_SERVER_ERROR,
+                ex.getMessage(),
+                request.getDescription(false));
+        return buildResponseEntity(error);
+    }
+
+    // Handle Exception (parent of RuntimeException and OtherExceptions layers
+    @ExceptionHandler(Exception.class)
+    protected ResponseEntity<Object> handleGeneralException(Exception ex, WebRequest request) {
+        ApiResponseError error = new ApiResponseError(HttpStatus.INTERNAL_SERVER_ERROR,
+                ex.getMessage(),
+                request.getDescription(false));
+        return buildResponseEntity(error);
+    }
+
+
+
 }
