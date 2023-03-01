@@ -18,7 +18,7 @@
         <mapstruct.version>1.5.2.Final</mapstruct.version>
         <mapstruct-processor.version>1.5.2.Final</mapstruct-processor.version>
         <lombok-mapstruct-bindin.version>0.2.0</lombok-mapstruct-bindin.version>
-
+        <jjwt.version>0.9.1</jjwt.version>
     </properties>
     <dependencies>
         <dependency>
@@ -78,6 +78,23 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok-mapstruct-binding</artifactId>
             <version>${lombok-mapstruct-bindin.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>${jjwt.version}</version>
         </dependency>
 
 

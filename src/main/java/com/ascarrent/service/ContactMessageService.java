@@ -68,6 +68,29 @@ public class ContactMessageService {
 
     }
 
+    public void deleteContactMessage(Long id) {
+        ContactMessageDTO contactMessageDTO = getMessageWithId(id);
+        contactMessageRepository.deleteById(id);
+    }
+
+    public void updateContactMessage(Long id, ContactMessageRequest contactMessageRequest) {
+        ContactMessageDTO foundContactMessageDTO = getMessageWithId(id);
+
+        foundContactMessageDTO.setSenderName(contactMessageRequest.getSenderName());
+        foundContactMessageDTO.setMessageBody(contactMessageRequest.getMessageBody());
+        foundContactMessageDTO.setEmail(contactMessageRequest.getEmail());
+        foundContactMessageDTO.setSubject(contactMessageRequest.getSubject());
+        foundContactMessageDTO.setPhone(contactMessageRequest.getPhone());
+
+        ContactMessage contactMessage = contactMessageMapper.contactMessageDTOToContactMessage(foundContactMessageDTO);
+        contactMessageRepository.save(contactMessage);
+
+
+
+
+    }
+
+
     // getPageDTO
     private Page<ContactMessageDTO> getPageDTO(Page<ContactMessage> contactMessagePage) {
         return contactMessagePage.map(contactMessage -> contactMessageMapper.contactMessageToDTO(contactMessage));
@@ -84,6 +107,7 @@ public class ContactMessageService {
 
         return request.getRemoteAddr();
     }
+
 
 
 }

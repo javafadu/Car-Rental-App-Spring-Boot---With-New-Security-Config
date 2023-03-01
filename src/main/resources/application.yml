@@ -50,7 +50,7 @@ logging:
   level:
     '[org.springframework.web]': WARN
     '[org.hibernate]': INFO
-    '[com.citylist]': INFO
+    '[ascarrent]': DEBUG
 
 info:
   application:

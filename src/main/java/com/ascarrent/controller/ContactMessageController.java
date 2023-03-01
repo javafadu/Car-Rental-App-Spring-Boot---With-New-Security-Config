@@ -3,6 +3,7 @@ package com.ascarrent.controller;
 import com.ascarrent.dto.ContactMessageDTO;
 import com.ascarrent.dto.request.ContactMessageRequest;
 import com.ascarrent.dto.response.ACRResponse;
+import com.ascarrent.dto.response.ResponseMessage;
 import com.ascarrent.service.ContactMessageService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -30,7 +31,7 @@ public class ContactMessageController {
     @PostMapping("/visitors")
     public ResponseEntity<ACRResponse> createMessage(@Valid @RequestBody ContactMessageRequest contactMessageRequest, HttpServletRequest httpServletRequest) {
         contactMessageService.createMessage(contactMessageRequest,httpServletRequest);
-        ACRResponse response = new ACRResponse("The Message has been successfully saved ", true);
+        ACRResponse response = new ACRResponse(ResponseMessage.CONTACT_MESSAGE_CREATE_MESSAGE, true);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
@@ -67,6 +68,23 @@ public class ContactMessageController {
     public ResponseEntity<ContactMessageDTO> getMessageWithRequestParam(
             @RequestParam("id") Long id) {
         return ResponseEntity.ok(contactMessageService.getMessageWithId(id));
+    }
+
+    // Delete Contact
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ACRResponse> deleteContactMessage(@PathVariable Long id) {
+        contactMessageService.deleteContactMessage(id);
+        ACRResponse acrResponse = new ACRResponse(ResponseMessage.CONTACT_MESSAGE_DELETE_RESPONSE,true);
+        return ResponseEntity.ok(acrResponse);
+    }
+
+    // Update Contact
+    @PutMapping("/{id}")
+    public ResponseEntity<ACRResponse> updateContactMessage(@PathVariable Long id, @Valid @RequestBody ContactMessageRequest contactMessageRequest) {
+        contactMessageService.updateContactMessage(id,contactMessageRequest);
+        ACRResponse acrResponse = new ACRResponse(ResponseMessage.CONTACT_MESSAGE_UPDATE_RESPONSE,true);
+        return ResponseEntity.ok(acrResponse);
+
     }
 
 }

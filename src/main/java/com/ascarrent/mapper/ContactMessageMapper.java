@@ -15,6 +15,9 @@ public interface ContactMessageMapper {
         ContactMessageDTO contactMessageToDTO(ContactMessage contactMessage);
 
         // ContactMessageDTO ---> ContactMessage
+        ContactMessage contactMessageDTOToContactMessage(ContactMessageDTO contactMessageDTO);
+
+        // ContactMessageDTO ---> ContactMessage
         @Mapping(target="id", ignore = true) // There is no id in DTO
         ContactMessage contactMessageRequestToContactMessage(ContactMessageRequest contactMessageRequest);
 
