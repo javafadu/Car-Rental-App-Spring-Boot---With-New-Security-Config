@@ -34,7 +34,7 @@ public class WebSecurityConfig {
                 .antMatchers("/","/login", "/register","/index.html").permitAll()
                 .anyRequest().authenticated();
 
-        // http.addFilterBefore(authTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(authTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
