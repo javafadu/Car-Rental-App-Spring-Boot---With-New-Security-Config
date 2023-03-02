@@ -43,6 +43,8 @@ public class User {
     @Column(nullable = false)
     private Boolean builtIn = false;
 
+    // Hibername makes Eager as default for ending with One relations
+    // Hibername makes Lazy as default for ending with Many relations
     @ManyToMany // LAZY
     @JoinTable(name="tbl_user_roles",
     joinColumns = @JoinColumn(name="user_id"),

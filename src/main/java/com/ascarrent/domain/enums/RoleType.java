@@ -7,8 +7,8 @@ public enum RoleType {
 
     private String name;
 
-    // Set name filed of ROLE_CUSTOMER as Customer
-    // Set name filed of ROLE_ADMIN as Administrator
+    // Set name field of ROLE_CUSTOMER as Customer
+    // Set name field of ROLE_ADMIN as Administrator
     private RoleType(String name) {
         this.name=name;
     }

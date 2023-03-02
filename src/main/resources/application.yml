@@ -52,6 +52,22 @@ logging:
     '[org.hibernate]': INFO
     '[ascarrent]': DEBUG
 
+management: #actuator
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  info:
+    env:
+      enabled: true
+  endpoint:
+    health:
+      show-details: always
+    shutdown:
+      enabled: true
+
+
+
 info:
   application:
     name: 'As Car Rent Backend Application'
