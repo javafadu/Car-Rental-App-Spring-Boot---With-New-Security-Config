@@ -40,6 +40,9 @@ public class User {
     @Column(length = 180, nullable = false)
     private String address;
 
+    @Column(length = 15, nullable = false)
+    private String zipCode;
+
     @Column(nullable = false)
     private Boolean builtIn = false;
 

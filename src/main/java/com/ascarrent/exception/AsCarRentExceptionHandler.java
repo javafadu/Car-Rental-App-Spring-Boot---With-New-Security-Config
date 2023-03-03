@@ -96,6 +96,16 @@ public class AsCarRentExceptionHandler extends ResponseEntityExceptionHandler {
         return buildResponseEntity(error);
     }
 
+    // 6- Handle Conflict Exception
+    @ExceptionHandler(ConflictException.class)
+    protected ResponseEntity<Object> handleConflictException(
+            ConflictException ex, WebRequest request) {
+        ApiResponseError error = new ApiResponseError(HttpStatus.CONFLICT,
+                ex.getMessage(),
+                request.getDescription(false));
+        return buildResponseEntity(error);
+    }
+
 
 
     // Handle RunTimeException (in case of any exception situation other than above situations in RunTimeException layer)

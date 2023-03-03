@@ -18,7 +18,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration // this is a configuration class
 @EnableGlobalMethodSecurity(prePostEnabled = true) // Method base security , hasRole issue
-public class WebSecurityConfig {
+public class SecurityConfig {
 
     // --AIM-- Set PasswordEncoder, AuthenticationProvider, AuthenticationManager, AuthTokenFilter JwtUtils
 
