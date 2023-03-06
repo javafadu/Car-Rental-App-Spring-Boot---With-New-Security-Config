@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -42,6 +43,10 @@ public class User {
 
     @Column(length = 15, nullable = false)
     private String zipCode;
+
+    @Column(nullable = true)
+    private LocalDate birthDate;
+
 
     @Column(nullable = false)
     private Boolean builtIn = false;
