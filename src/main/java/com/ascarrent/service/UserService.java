@@ -12,6 +12,8 @@ import com.ascarrent.mapper.UserMapper;
 import com.ascarrent.repository.UserRepository;
 import com.ascarrent.security.SecurityUtils;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -75,7 +77,7 @@ public class UserService {
 
 
     public List<UserDTO> getAllUsers() {
-        List<User> users =  userRepository.findAll();
+        List<User> users = userRepository.findAll();
         return userMapper.userListToUserDTOList(users);
     }
 
@@ -85,10 +87,29 @@ public class UserService {
     }
 
 
+    // Get Current Logged-in User
     public User getCurrentLoggedInUser() {
-        String email = SecurityUtils.getCurrentLoggedInUser().orElseThrow(()->
-                 new ResourceNotFoundException(ErrorMessages.PRINCIPAL_NOT_FOUND_MESSAGE));
+        String email = SecurityUtils.getCurrentLoggedInUser().orElseThrow(() ->
+                new ResourceNotFoundException(ErrorMessages.PRINCIPAL_NOT_FOUND_MESSAGE));
         return getUserByEmail(email);
     }
 
+
+    public Page<UserDTO> getAllUsersWithPage(Pageable pageable) {
+        Page<User> userPage = userRepository.findAll(pageable);
+        return convertPageUserToPageUserDTO(userPage);
+    }
+
+
+    // Convert Page<User> - Page<UserDTO>
+    private Page<UserDTO> convertPageUserToPageUserDTO(Page<User> userPage) {
+        return userPage.map(
+                user -> userMapper.userToUserDTO(user)
+        );
+    }
+
+    public UserDTO getUserWithId(Long id) {
+        User user = userRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException(String.format(ErrorMessages.RESOURCE_NOT_FOUND_EXCEPTION,id)));
+        return userMapper.userToUserDTO(user);
+    }
 }

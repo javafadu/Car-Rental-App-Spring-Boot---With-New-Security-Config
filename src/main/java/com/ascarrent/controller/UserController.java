@@ -2,11 +2,13 @@ package com.ascarrent.controller;
 
 import com.ascarrent.dto.UserDTO;
 import com.ascarrent.service.UserService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -38,7 +40,26 @@ public class UserController {
     }
 
     // -- Get All user With Paging --
+    @GetMapping("/auth/pages")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Page<UserDTO>> getAllUsersWithPage(
+            @RequestParam(required = false, value = "page", defaultValue = "0") int page,
+            @RequestParam(required = false, value = "size", defaultValue = "5") int size,
+            @RequestParam(required = false, value = "sort", defaultValue = "id") String prop,
+            @RequestParam(required = false, value = "direction", defaultValue = "ASC") Sort.Direction direction)
+     {
+         Pageable pageable = PageRequest.of(page, size, Sort.by(direction, prop));
+         Page<UserDTO> userDTOPage =  userService.getAllUsersWithPage(pageable);
+         return ResponseEntity.ok(userDTOPage);
 
+    }
 
+    // -- Get a User With Id --
+    @GetMapping("/auth/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<UserDTO> getUserWithId(@PathVariable Long id) { //@PathVariable("id") Long id
+        return ResponseEntity.ok(userService.getUserWithId(id)) ;
+
+    }
 
 }
