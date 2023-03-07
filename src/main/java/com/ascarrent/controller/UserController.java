@@ -2,7 +2,6 @@ package com.ascarrent.controller;
 
 import com.ascarrent.dto.UserDTO;
 import com.ascarrent.service.UserService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,13 +21,24 @@ public class UserController {
         this.userService = userService;
     }
 
-
     // -- Get All Users --
     @GetMapping("/auth/all")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<UserDTO>> getAllUsers() {
-        List<UserDTO> userList = userService.getAllUsers();
-        return ResponseEntity.ok(userList);
+       List<UserDTO>  users = userService.getAllUsers();
+       return ResponseEntity.ok(users);
     }
+
+    // -- Get Authenticated (currently logged-in) User Info --
+    @GetMapping
+    @PreAuthorize("hasRole('ADMIN') or asRole('CUSTOMER')")
+    public ResponseEntity<UserDTO> getAuthUser() {
+        UserDTO userDTO = userService.getPrincipal();
+        return ResponseEntity.ok(userDTO);
+    }
+
+    // -- Get All user With Paging --
+
+
 
 }

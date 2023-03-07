@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 @Getter
 @Setter
 @AllArgsConstructor
+
 public class UserDetailsImpl implements UserDetails {
 
     private String email;
@@ -29,7 +30,7 @@ public class UserDetailsImpl implements UserDetails {
     public static UserDetailsImpl build(User user) {
         List<SimpleGrantedAuthority> authorities = user.getRoles()
                 .stream()
-                .map(role -> new SimpleGrantedAuthority(role.getRoleType().getName()))
+                .map(role -> new SimpleGrantedAuthority(role.getType().name()))
                 .collect(Collectors.toList());
 
         return new UserDetailsImpl(user.getEmail(), user.getPassword(), authorities);

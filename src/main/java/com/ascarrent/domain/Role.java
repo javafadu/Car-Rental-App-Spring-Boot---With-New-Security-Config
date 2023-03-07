@@ -21,12 +21,12 @@ public class Role {
     private Integer id;
 
     @Enumerated(EnumType.STRING)
-    private RoleType roleType;
+    private RoleType type;
 
     @Override
     public String toString() {
         return "Role{" +
-                "roleType=" + roleType +
+                "type=" + type +
                 '}';
     }
 }

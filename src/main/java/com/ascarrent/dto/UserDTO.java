@@ -6,10 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
@@ -48,7 +44,7 @@ public class UserDTO {
     public void setRoles(Set<Role> roles) {
         Set<String> roleStr = new HashSet<>();
         roles.forEach(r->{
-            roleStr.add(r.getRoleType().getName()); // Customer, Administrator
+            roleStr.add(r.getType().getName()); // Customer, Administrator
         });
 
         this.roles=roleStr;

@@ -4,21 +4,14 @@ import com.ascarrent.domain.Role;
 import com.ascarrent.domain.User;
 import com.ascarrent.domain.enums.RoleType;
 import com.ascarrent.dto.UserDTO;
-import com.ascarrent.dto.request.LoginRequest;
 import com.ascarrent.dto.request.UserRegisterRequest;
-import com.ascarrent.dto.response.LoginResponse;
 import com.ascarrent.exception.ConflictException;
 import com.ascarrent.exception.ResourceNotFoundException;
 import com.ascarrent.exception.message.ErrorMessages;
 import com.ascarrent.mapper.UserMapper;
 import com.ascarrent.repository.UserRepository;
-import com.ascarrent.security.jwt.JwtUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.ascarrent.security.SecurityUtils;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -29,20 +22,15 @@ import java.util.Set;
 @Service
 public class UserService {
 
-
     private final UserRepository userRepository;
-    private final RoleService roleService;
     private final PasswordEncoder passwordEncoder;
-    private final AuthenticationManager authenticationManager;
-    private final JwtUtils jwtUtils;
+    private final RoleService roleService;
     private final UserMapper userMapper;
 
-    public UserService(UserRepository userRepository, RoleService roleService, @Lazy PasswordEncoder passwordEncoder,@Lazy AuthenticationManager authenticationManager,JwtUtils jwtUtils, UserMapper userMapper) {
+    public UserService(UserRepository userRepository, @Lazy PasswordEncoder passwordEncoder, RoleService roleService, UserMapper userMapper) {
         this.userRepository = userRepository;
-        this.roleService = roleService;
         this.passwordEncoder = passwordEncoder;
-        this.authenticationManager = authenticationManager;
-        this.jwtUtils = jwtUtils;
+        this.roleService = roleService;
         this.userMapper = userMapper;
     }
 
@@ -60,7 +48,7 @@ public class UserService {
         }
 
         // set "Customer" for the new registered user as default
-        Role role = roleService.findByRoleType(RoleType.ROLE_CUSTOMER);
+        Role role = roleService.findByType(RoleType.ROLE_CUSTOMER);
         Set<Role> roles = new HashSet<>();
         roles.add(role);
 
@@ -85,26 +73,22 @@ public class UserService {
 
     }
 
-    public LoginResponse authenticate(LoginRequest loginRequest) {
-        // 1- validate username(email) and password via authentication manager
-        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword());
-
-        Authentication authentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
-        // 2- keep authenticated info in SecurityContext
-        /* currently logged in user (authentication) information automatically kept in the SecurityContext*/
-
-        // 3- generate token
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        String jwtToken = jwtUtils.generateJwtToken(userDetails);
-
-        // 4- Send jwtToken to controller
-        LoginResponse loginResponse = new LoginResponse(jwtToken);
-        return loginResponse;
-
-    }
 
     public List<UserDTO> getAllUsers() {
-       List<User> users = userRepository.findAll();
-       return userMapper.userListToUserDTOList(users);
+        List<User> users =  userRepository.findAll();
+        return userMapper.userListToUserDTOList(users);
     }
+
+
+    public UserDTO getPrincipal() {
+        return userMapper.userToUserDTO(getCurrentLoggedInUser());
+    }
+
+
+    public User getCurrentLoggedInUser() {
+        String email = SecurityUtils.getCurrentLoggedInUser().orElseThrow(()->
+                 new ResourceNotFoundException(ErrorMessages.PRINCIPAL_NOT_FOUND_MESSAGE));
+        return getUserByEmail(email);
+    }
+
 }

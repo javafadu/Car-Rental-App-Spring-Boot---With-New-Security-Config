@@ -13,7 +13,7 @@ public interface UserRepository extends JpaRepository<User,Long> {
 
     Boolean existsByEmail(String email);
 
-    // make EAGER of roles defined as LAZY in User entity
+    // makes EAGER of roles (default is LAZY) for this method
     @EntityGraph(attributePaths = "roles")
     Optional<User> findByEmail(String email);
 
