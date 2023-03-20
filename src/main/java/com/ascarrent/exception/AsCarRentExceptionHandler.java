@@ -129,6 +129,16 @@ public class AsCarRentExceptionHandler extends ResponseEntityExceptionHandler {
         return buildResponseEntity(error);
     }
 
+    // 9- Handle BadRequest Exception
+    @ExceptionHandler(BadRequestException.class)
+    protected ResponseEntity<Object> handleBadRequestException(
+            BadRequestException ex, WebRequest request) {
+        ApiResponseError error = new ApiResponseError(HttpStatus.BAD_REQUEST,
+                ex.getMessage(),
+                request.getDescription(false));
+        return buildResponseEntity(error);
+    }
+
 
 
     // Handle RunTimeException (in case of any exception situation other than above situations in RunTimeException layer)

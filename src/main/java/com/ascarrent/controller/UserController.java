@@ -1,6 +1,10 @@
 package com.ascarrent.controller;
 
 import com.ascarrent.dto.UserDTO;
+import com.ascarrent.dto.request.UpdatePasswordRequest;
+import com.ascarrent.dto.request.UserUpdateRequest;
+import com.ascarrent.dto.response.ACRResponse;
+import com.ascarrent.dto.response.ResponseMessage;
 import com.ascarrent.service.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -10,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -61,5 +66,32 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserWithId(id)) ;
 
     }
+
+    // -- Update password (logged in user) --
+    @PatchMapping("/auth")
+    @PreAuthorize("hasRole('ADMIN') or asRole('CUSTOMER')")
+    public ResponseEntity<ACRResponse> updatePassword(@Valid @RequestBody UpdatePasswordRequest updatePasswordRequest) {
+        userService.updatePassword(updatePasswordRequest);
+
+        ACRResponse response = new ACRResponse();
+        response.setMessage(ResponseMessage.PASSWORD_CHANGED_RESPONSE_MESSAGE);
+        response.setSuccess(true);
+
+        return ResponseEntity.ok(response);
+    }
+
+    // -- Update User (Authenticated user update own info)
+    @PutMapping
+    @PreAuthorize("hasRole('ADMIN') or asRole('CUSTOMER')")
+    public ResponseEntity<ACRResponse> updateUser(@Valid @RequestBody UserUpdateRequest userUpdateRequest) {
+        userService.updateUser(userUpdateRequest);
+
+        ACRResponse response = new ACRResponse();
+        response.setMessage(ResponseMessage.USER_UPDATE_RESPONSE_MESSAGE);
+        response.setSuccess(true);
+
+        return ResponseEntity.ok(response);
+    }
+
 
 }
