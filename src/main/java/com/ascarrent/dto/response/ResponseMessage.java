@@ -7,5 +7,6 @@ public class ResponseMessage {
     public final static String USER_REGISTER_RESPONSE_MESSAGE = "User was successfully created";
     public final static String PASSWORD_CHANGED_RESPONSE_MESSAGE = "The password has been updated successfully";
     public final static String USER_UPDATE_RESPONSE_MESSAGE = "The user has been updated successfully";
+    public final static String USER_DELETE_RESPONSE_MESSAGE = "The user has been deleted successfully";
 
 }

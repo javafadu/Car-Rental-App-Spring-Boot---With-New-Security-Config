@@ -2,6 +2,7 @@ package com.ascarrent.controller;
 
 import com.ascarrent.dto.UserDTO;
 import com.ascarrent.dto.request.UpdatePasswordRequest;
+import com.ascarrent.dto.request.UserUpdateByAdminRequest;
 import com.ascarrent.dto.request.UserUpdateRequest;
 import com.ascarrent.dto.response.ACRResponse;
 import com.ascarrent.dto.response.ResponseMessage;
@@ -93,5 +94,30 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
+    // -- Update User by Admin
+    @PutMapping("/{id}/auth")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ACRResponse> updateUserByAdmin(@PathVariable Long id, @Valid @RequestBody UserUpdateByAdminRequest userUpdateByAdminRequest) {
+        userService.uptadeUserByAdmin(id, userUpdateByAdminRequest);
+
+        ACRResponse response = new ACRResponse();
+        response.setMessage(ResponseMessage.USER_UPDATE_RESPONSE_MESSAGE);
+        response.setSuccess(true);
+
+        return ResponseEntity.ok(response);
+    }
+
+    // -- Delete User by Admin
+    @DeleteMapping("/{id}/auth")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ACRResponse> deleteUser(@PathVariable Long id) {
+        userService.removeUserById(id);
+
+        ACRResponse response = new ACRResponse();
+        response.setMessage(ResponseMessage.USER_DELETE_RESPONSE_MESSAGE);
+        response.setSuccess(true);
+
+        return ResponseEntity.ok(response);
+    }
 
 }

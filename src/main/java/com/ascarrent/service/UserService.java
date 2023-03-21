@@ -6,6 +6,7 @@ import com.ascarrent.domain.enums.RoleType;
 import com.ascarrent.dto.UserDTO;
 import com.ascarrent.dto.request.UpdatePasswordRequest;
 import com.ascarrent.dto.request.UserRegisterRequest;
+import com.ascarrent.dto.request.UserUpdateByAdminRequest;
 import com.ascarrent.dto.request.UserUpdateRequest;
 import com.ascarrent.exception.BadRequestException;
 import com.ascarrent.exception.ConflictException;
@@ -167,4 +168,96 @@ public class UserService {
                 userUpdateRequest.getBirthDate());
 
     }
+
+    public void uptadeUserByAdmin(Long id, UserUpdateByAdminRequest userUpdateByAdminRequest) {
+        // check1: control user with id is exist or not
+        User user = getById(id);
+
+        // check2: control builtIn
+        if(user.getBuiltIn()) {
+            throw new BadRequestException(ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE);
+        }
+
+        // check3: email control
+        Boolean emailExist =  userRepository.existsByEmail(userUpdateByAdminRequest.getEmail());
+        if(emailExist && !userUpdateByAdminRequest.getEmail().equals(user.getEmail())) {
+            throw new ConflictException(String.format(ErrorMessages.EMAIL_ALREADY_EXIST_MESSAGE,userUpdateByAdminRequest.getEmail()));
+        }
+
+        // check4: password control if it is null or not
+        if(userUpdateByAdminRequest.getPassword()==null) {
+            userUpdateByAdminRequest.setPassword(user.getPassword());
+        } else {
+            String encodedPassword = passwordEncoder.encode(userUpdateByAdminRequest.getPassword());
+            userUpdateByAdminRequest.setPassword(encodedPassword);
+        }
+
+        // check5: roles -> convert ROLE_ADMIN or ROLE_CUSTOMER from Administrator or Customer
+        // pRoles = {"Customer", "Administrator"}
+        Set<String> userStrRoles =  userUpdateByAdminRequest.getRoles();
+        Set<Role> roles =  convertRoles(userStrRoles);
+
+
+        // Set all items
+        user.setFirstName(userUpdateByAdminRequest.getFirstName());
+        user.setLastName(userUpdateByAdminRequest.getLastName());
+        user.setEmail(userUpdateByAdminRequest.getEmail());
+        user.setPassword(userUpdateByAdminRequest.getPassword());
+        user.setPhoneNumber(userUpdateByAdminRequest.getPhoneNumber());
+        user.setAddress(userUpdateByAdminRequest.getAddress());
+        user.setZipCode(userUpdateByAdminRequest.getZipCode());
+        user.setBirthDate(userUpdateByAdminRequest.getBirthDate());
+        user.setBuiltIn(userUpdateByAdminRequest.getBuiltIn());
+        user.setRoles(roles);
+
+        userRepository.save(user);
+
+
+    }
+
+    public void removeUserById(Long id) {
+        // check1: control user with id is exist or not
+        User user = getById(id);
+
+        // check2: control builtIn
+        if(user.getBuiltIn()) {
+            throw new BadRequestException(ErrorMessages.NOT_PERMITTED_METHOD_MESSAGE);
+        }
+
+        // check3: control if this user has a reservation in the reservation table db
+        // TODO eklenecek
+
+        userRepository.deleteById(id);
+    }
+
+
+    // Supporting method to be used any method in this class
+    private User getById(Long id) {
+        User user = userRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException(String.format(ErrorMessages.RESOURCE_NOT_FOUND_EXCEPTION,id)));
+
+        return user;
+    }
+
+
+    private Set<Role> convertRoles(Set<String> pRoles) { // pRoles = {"Customer", "Administrator"}
+        Set<Role> roles = new HashSet<>();
+        if(pRoles==null) {
+            Role userRole = roleService.findByType(RoleType.ROLE_CUSTOMER);
+            roles.add(userRole);
+        } else {
+            pRoles.forEach(roleStr-> {
+                if(roleStr.equals(RoleType.ROLE_ADMIN.getName())) {
+                    Role adminRole = roleService.findByType(RoleType.ROLE_ADMIN);
+                    roles.add(adminRole);
+                } else {
+                    Role userRole = roleService.findByType(RoleType.ROLE_CUSTOMER);
+                    roles.add(userRole);
+                }
+            });
+        }
+        return roles;
+    }
+
+
+
 }
