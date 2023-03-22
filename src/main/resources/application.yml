@@ -42,6 +42,12 @@ ascarrent:
     jwtSecret: ascar@Rent@3414
     jwtExpirationMs: 86400000
 
+#image
+servlet:
+  multipart:
+    max-file-size: 3MB
+    max-request-size: 3MB
+
 logging:
   file:
     name: logs/ascarrent.log
