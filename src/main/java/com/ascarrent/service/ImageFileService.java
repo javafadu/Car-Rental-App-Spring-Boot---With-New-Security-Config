@@ -65,4 +65,9 @@ public class ImageFileService {
         return imageFileDTOS;
 
     }
+
+    public void deleteImageFileById(String id) {
+        ImageFile imageFile = getImageById(id);
+        imageFileRepository.delete(imageFile);
+    }
 }

@@ -3,6 +3,7 @@ package com.ascarrent.controller;
 
 import com.ascarrent.domain.ImageFile;
 import com.ascarrent.dto.ImageFileDTO;
+import com.ascarrent.dto.response.ACRResponse;
 import com.ascarrent.dto.response.ImageSavedResponse;
 import com.ascarrent.dto.response.ResponseMessage;
 import com.ascarrent.service.ImageFileService;
@@ -70,6 +71,15 @@ public class ImageFileController {
     public ResponseEntity<List<ImageFileDTO>> getAllImages() {
         List<ImageFileDTO> allImageDTO = imageFileService.getAllImages();
         return ResponseEntity.ok(allImageDTO);
+    }
+
+    // -- Delete Image With Id
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ACRResponse> deleteImageFile(@PathVariable String id) {
+        imageFileService.deleteImageFileById(id);
+        ACRResponse response = new ACRResponse(ResponseMessage.IMAGE_DELETE_RESPONSE_MESSAGE,true);
+        return ResponseEntity.ok(response);
     }
 
 

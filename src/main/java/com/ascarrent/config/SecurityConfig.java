@@ -32,7 +32,13 @@ public class SecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/","/login", "/register","/files/download/**","/index.html").permitAll()
+                .antMatchers("/"
+                        ,"/login"
+                        , "/register"
+                        ,"/files/download/**"
+                        ,"/files/display/**"
+                        ,"/index.html"
+                ).permitAll()
                 .anyRequest().authenticated();
 
 
