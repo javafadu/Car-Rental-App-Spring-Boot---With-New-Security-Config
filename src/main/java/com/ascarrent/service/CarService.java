@@ -64,8 +64,14 @@ public class CarService {
         return carWithPages.map(car->carMapper.carToCarDTO(car));
     }
 
+    // return CarDTO
     public CarDTO getCarById(Long id) {
         return carMapper.carToCarDTO(getCar(id));
+    }
+
+    // return Car entity
+    public Car getCarWithId(Long carId) {
+        return carRepository.findById(carId).orElseThrow(()-> new ResourceNotFoundException(String.format(ErrorMessages.RESOURCE_NOT_FOUND_EXCEPTION,carId)));
     }
 
 

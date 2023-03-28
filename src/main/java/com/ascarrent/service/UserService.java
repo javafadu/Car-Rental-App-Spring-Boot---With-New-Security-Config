@@ -232,7 +232,7 @@ public class UserService {
 
 
     // Supporting method to be used any method in this class
-    private User getById(Long id) {
+    public User getById(Long id) {
         User user = userRepository.findById(id).orElseThrow(()-> new ResourceNotFoundException(String.format(ErrorMessages.RESOURCE_NOT_FOUND_EXCEPTION,id)));
 
         return user;

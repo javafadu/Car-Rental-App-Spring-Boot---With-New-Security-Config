@@ -12,4 +12,7 @@ public class ErrorMessages {
     public final static String PASSWORD_NOT_MATCHED_MESSAGE = "Your passwords are not matched";
     public final static String IMAGE_NOT_FOUND_EXCEPTION = "Image File with id %s not found";
     public final static String IMAGE_USED_MESSAGE = "This image is used for another car ";
+    public final static String RESERVATION_TIME_INCORRECT_MESSAGE = "The reservation pick up time or drop off time is incorrect ";
+    public final static String CAR_NOT_AVAILABLE_MESSAGE = "This car is not available for selected time ";
+
 }
