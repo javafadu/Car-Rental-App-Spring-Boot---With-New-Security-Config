@@ -33,12 +33,14 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final RoleService roleService;
     private final UserMapper userMapper;
+    private final ReservationService reservationService;
 
-    public UserService(UserRepository userRepository, @Lazy PasswordEncoder passwordEncoder, RoleService roleService, UserMapper userMapper) {
+    public UserService(UserRepository userRepository, @Lazy PasswordEncoder passwordEncoder, RoleService roleService, UserMapper userMapper, ReservationService reservationService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.roleService = roleService;
         this.userMapper = userMapper;
+        this.reservationService = reservationService;
     }
 
     public User getUserByEmail(String email) {
@@ -169,7 +171,7 @@ public class UserService {
 
     }
 
-    public void uptadeUserByAdmin(Long id, UserUpdateByAdminRequest userUpdateByAdminRequest) {
+    public void updateUserByAdmin(Long id, UserUpdateByAdminRequest userUpdateByAdminRequest) {
         // check1: control user with id is exist or not
         User user = getById(id);
 
@@ -225,9 +227,16 @@ public class UserService {
         }
 
         // check3: control if this user has a reservation in the reservation table db
-        // TODO eklenecek
+        boolean isExist = reservationService.existsByUser(user);
+        if(isExist) {
+            throw new BadRequestException(ErrorMessages.USER_CANNOT_BE_DELETED);
+        }
 
         userRepository.deleteById(id);
+    }
+
+    public List<User> getUsers() {
+        return userRepository.findAll();
     }
 
 

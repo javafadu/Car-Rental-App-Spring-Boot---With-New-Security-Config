@@ -98,7 +98,7 @@ public class UserController {
     @PutMapping("/{id}/auth")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ACRResponse> updateUserByAdmin(@PathVariable Long id, @Valid @RequestBody UserUpdateByAdminRequest userUpdateByAdminRequest) {
-        userService.uptadeUserByAdmin(id, userUpdateByAdminRequest);
+        userService.updateUserByAdmin(id, userUpdateByAdminRequest);
 
         ACRResponse response = new ACRResponse();
         response.setMessage(ResponseMessage.USER_UPDATE_RESPONSE_MESSAGE);

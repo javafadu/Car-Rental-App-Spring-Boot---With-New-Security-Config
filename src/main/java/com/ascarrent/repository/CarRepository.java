@@ -32,4 +32,7 @@ public interface CarRepository extends JpaRepository<Car, Long> {
 
     @Query("SELECT c FROM Car c JOIN c.image im WHERE im.id=:id")
     List<Car> findCarsByImageId(@Param("id") String id);
+
+    @EntityGraph(attributePaths = "id") // only brings id level field not sub fields
+    List<Car> getAllBy();
 }

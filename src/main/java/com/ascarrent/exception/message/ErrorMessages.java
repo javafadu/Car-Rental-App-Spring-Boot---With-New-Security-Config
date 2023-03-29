@@ -15,5 +15,9 @@ public class ErrorMessages {
     public final static String RESERVATION_TIME_INCORRECT_MESSAGE = "The reservation pick up time or drop off time is incorrect ";
     public final static String CAR_NOT_AVAILABLE_MESSAGE = "This car is not available for selected time ";
     public final static String RESERVATION_STATUS_CANT_CHANGE_MESSAGE = "Reservation can not be updated for cancelled or done reservations ";
+    public final static String CAR_USED_BY_RESERVATION_MESSAGE = "This car is used by a reservation ";
+    public final static String USER_CANNOT_BE_DELETED = "This user has reservations so it can not be deleted ";
+    public final static String EXCEL_REPORT_ERROR_MESSAGE = "Error occurred while generating excel report";
+
 
 }

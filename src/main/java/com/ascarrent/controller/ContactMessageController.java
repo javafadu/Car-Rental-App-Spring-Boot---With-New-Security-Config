@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -37,6 +38,7 @@ public class ContactMessageController {
 
     // Get All ContactMessages
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<ContactMessageDTO>> getAllContactMessages() {
         List<ContactMessageDTO> contactMessageList =  contactMessageService.getAllContactMessages();
         return ResponseEntity.ok(contactMessageList);
@@ -44,6 +46,7 @@ public class ContactMessageController {
 
     // Gett All ContactMessages by Paging
     @GetMapping("/pages")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Page<ContactMessageDTO>> getAllContactMessagesWithPage(
             @RequestParam("page") int page,
             @RequestParam("size") int size,
@@ -59,12 +62,14 @@ public class ContactMessageController {
 
     // Get a contact with id (PathVariable solution)
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ContactMessageDTO> getMessageWithPath(@PathVariable("id") Long id) {
        return ResponseEntity.ok(contactMessageService.getMessageWithId(id));
     }
 
     // Get a contact with id (RequestParam solution)
     @GetMapping("/message")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ContactMessageDTO> getMessageWithRequestParam(
             @RequestParam("id") Long id) {
         return ResponseEntity.ok(contactMessageService.getMessageWithId(id));
@@ -72,6 +77,7 @@ public class ContactMessageController {
 
     // Delete Contact
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ACRResponse> deleteContactMessage(@PathVariable Long id) {
         contactMessageService.deleteContactMessage(id);
         ACRResponse acrResponse = new ACRResponse(ResponseMessage.CONTACT_MESSAGE_DELETE_RESPONSE,true);
@@ -80,6 +86,7 @@ public class ContactMessageController {
 
     // Update Contact
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ACRResponse> updateContactMessage(@PathVariable Long id, @Valid @RequestBody ContactMessageRequest contactMessageRequest) {
         contactMessageService.updateContactMessage(id,contactMessageRequest);
         ACRResponse acrResponse = new ACRResponse(ResponseMessage.CONTACT_MESSAGE_UPDATE_RESPONSE,true);

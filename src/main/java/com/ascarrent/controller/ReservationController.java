@@ -26,7 +26,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
-@RequestMapping("/reservation")
+@RequestMapping("/reservations")
 public class ReservationController {
 
     private final ReservationService reservationService;
@@ -126,6 +126,41 @@ public class ReservationController {
         Page<ReservationDTO> reservationDTOS = reservationService.findReservationPageByUser(user, pageable);
 
         return ResponseEntity.ok(reservationDTOS);
+    }
+
+    // -- Get Own (Logged in user) Reservation With Id
+    @GetMapping("/{id}/auth")
+    @PreAuthorize("hasRole('CUSTOMER') or hasRole('ADMIN')")
+    public ResponseEntity<ReservationDTO> getUserReservationById(@PathVariable Long id) {
+        User user = userService.getCurrentLoggedInUser();
+        ReservationDTO reservationDTO = reservationService.findByIdAndUser(id,user);
+        return ResponseEntity.ok(reservationDTO);
+    }
+
+    // Get Own All Reservation for Logged In user
+    @GetMapping("/auth/all")
+    @PreAuthorize("hasRole('CUSTOMER') or hasRole('ADMIN')")
+    public ResponseEntity<Page<ReservationDTO>> getAuthAllReservations(
+            @RequestParam(required = false, value = "page", defaultValue = "0") int page,
+            @RequestParam(required = false, value = "size", defaultValue = "5") int size,
+            @RequestParam(required = false, value = "sort", defaultValue = "id") String prop,
+            @RequestParam(required = false, value = "direction", defaultValue = "ASC") Sort.Direction direction
+    ) {
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(direction, prop));
+
+        User user = userService.getCurrentLoggedInUser();
+        Page<ReservationDTO> reservationDTOPages = reservationService.findReservationPageByUser(user,pageable);
+        return ResponseEntity.ok(reservationDTOPages);
+    }
+
+    // -- Delete Reservation
+    @DeleteMapping("/admin/{id}/auth")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ACRResponse> deleteReservation(@PathVariable Long id) {
+        reservationService.removeById(id);
+        ACRResponse response = new ACRResponse(ResponseMessage.RESERVATION_DELETED_RESPONSE_MESSAGE,true);
+        return ResponseEntity.ok(response);
     }
 
 }

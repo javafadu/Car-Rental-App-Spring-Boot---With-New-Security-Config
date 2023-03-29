@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.ascarrent</groupId>
     <artifactId>ascarrent</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>ascarrent</name>
     <description>ascarrent</description>
     <properties>
@@ -19,6 +19,8 @@
         <mapstruct-processor.version>1.5.2.Final</mapstruct-processor.version>
         <lombok-mapstruct-bindin.version>0.2.0</lombok-mapstruct-bindin.version>
         <jjwt.version>0.9.1</jjwt.version>
+        <apache.poi.version>4.1.0</apache.poi.version>
+        <springdoc.openapi.version>1.6.9</springdoc.openapi.version>
     </properties>
     <dependencies>
         <dependency>
@@ -95,6 +97,20 @@
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt</artifactId>
             <version>${jjwt.version}</version>
+        </dependency>
+
+        <!-- EXCEL REPORT -->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>${apache.poi.version}</version>
+        </dependency>
+
+        <!-- SWAGGER DOCUMENT -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>${springdoc.openapi.version}</version>
         </dependency>
 
 

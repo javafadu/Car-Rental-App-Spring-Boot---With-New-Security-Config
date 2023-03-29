@@ -1,5 +1,6 @@
 package com.ascarrent.repository;
 
+import com.ascarrent.domain.Car;
 import com.ascarrent.domain.Reservation;
 import com.ascarrent.domain.User;
 import com.ascarrent.domain.enums.ReservationStatus;
@@ -48,4 +49,14 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     @EntityGraph(attributePaths = {"car", "car.image","user"})
     Page<Reservation> findAllByUser(User user, Pageable pageable);
+
+    @EntityGraph(attributePaths = {"car", "car.image","user"})
+    Optional<Reservation> findByIdAndUser(Long id, User user);
+
+    boolean existsByCar(Car car);
+
+    boolean existsByUser(User user);
+
+    @EntityGraph(attributePaths = {"car", "user"})
+    List<Reservation> findAllBy();
 }
